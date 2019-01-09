@@ -51,8 +51,9 @@ RSpec.describe User, type: :model do
   	describe '#info' do #testar um método de instância
   		it 'returns email and created_at' do
   			user.save!
+  			allow(Devise).to receive(:friendly_token).and_return('abc123xyzTOKEN')
 
-  			expect(user.info).to eq("#{user.email} - #{user.created_at}")
+  			expect(user.info).to eq("#{user.email} - #{user.created_at} - Token: abc123xyzTOKEN")
   		end
   	end
 
