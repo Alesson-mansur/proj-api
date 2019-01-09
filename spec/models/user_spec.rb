@@ -24,6 +24,7 @@ RSpec.describe User, type: :model do
 	it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
 	it { is_expected.to validate_confirmation_of(:password) }
 	it { is_expected.to allow_value('Ale@ale.com').for(:email) }
+	it { is_expected.to validate_uniqueness_of(:auth_token) }
 
 	#subject{ FactoryGirl.build(:user) }, mas devido à configuração feita no rails_helper em spec para
 	#o factorygirl, podemos usar apenas:
@@ -46,5 +47,13 @@ RSpec.describe User, type: :model do
   	#it { expect(@user).to respond_to(:email) }
   	#it { expect(subject).to respond_to(:email) }
   	#it { is_expected.to respond_to(:email) }
+
+  	describe '#info' do #testar um método de instância
+  		it 'returns email and created_at' do
+  			user.save!
+
+  			expect(user.info).to eq("#{user.email} - #{user.created_at}")
+  		end
+  	end
 
 end
