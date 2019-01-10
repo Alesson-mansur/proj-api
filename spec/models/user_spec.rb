@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 	let(:user) { build(:user) } #cuja chamada para o teste passa a ser
-
-	#it { expect(user).to respond_to(:email) } #sem o @
+	#it { expect(user).to respond_to(:email) } #sem o @, mas vamos passar a usar o Shoulda-matchers
 
 	#context 'when name is blank' do
 	#	before { user.name = " " }
@@ -50,11 +49,32 @@ RSpec.describe User, type: :model do
 
   	describe '#info' do #testar um método de instância
   		it 'returns email and created_at' do
-  			user.save!
+  			user.save! #O ! nesse caso faz com que o active-record execute uma excessão
+  			#que para o teste caso o objeto não seja salvo. Sem o ! seria retornado apenas
+  			#um false caso o objeto não fosse salvo.
   			allow(Devise).to receive(:friendly_token).and_return('abc123xyzTOKEN')
 
   			expect(user.info).to eq("#{user.email} - #{user.created_at} - Token: abc123xyzTOKEN")
   		end
+  	end
+
+  	describe '#generate_authentication_token!' do
+
+  		it 'generates a unique auth token' do
+  			allow(Devise).to receive(:friendly_token).and_return('abc123xyzTOKEN')
+  			user.generate_authentication_token!
+
+  			expect(user.auth_token).to eq('abc123xyzTOKEN')
+  		end
+
+  		it 'generates another auth token when the current auth token already has been taken' do
+  			allow(Devise).to receive(:friendly_token).and_return('abc123tokenxyz', 'abc123tokenxyz','abcXYZ123456789')
+  			existing_user = create(:user)
+  			user.generate_authentication_token!
+
+			expect(user.auth_token).not_to eq(existing_user.auth_token)		
+  		end
+
   	end
 
 end
