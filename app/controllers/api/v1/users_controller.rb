@@ -27,7 +27,6 @@ class Api::V1::UsersController < ApplicationController
 			render json: user, status: 200
 		else
 			render json: { errors: user.errors }, status: 422
-			
 		end
 		
 	end
@@ -40,7 +39,6 @@ class Api::V1::UsersController < ApplicationController
 
 	def user_params
 		params.require(:user).permit(:email,:password,:password_confirmation)
-		
 	end
 
 end
