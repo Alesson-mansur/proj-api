@@ -4,6 +4,8 @@ RSpec.describe User, type: :model do
 	let(:user) { build(:user) } #cuja chamada para o teste passa a ser
 	#it { expect(user).to respond_to(:email) } #sem o @, mas vamos passar a usar o Shoulda-matchers
 
+  it { is_expected.to have_many(:tasks).dependent(:destroy) }
+
 	#context 'when name is blank' do
 	#	before { user.name = " " }
 
